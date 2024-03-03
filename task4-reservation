@@ -1,0 +1,71 @@
+class Room:
+    def __init__(self, room_number, category, price, available=True):
+        self.room_number = room_number
+        self.category = category
+        self.price = price
+        self.available = available
+
+class Reservation:
+    def __init__(self, guest_name, room, check_in_date, check_out_date):
+        self.guest_name = guest_name
+        self.room = room
+        self.check_in_date = check_in_date
+        self.check_out_date = check_out_date
+
+class Hotel:
+    def __init__(self, name):
+        self.name = name
+        self.rooms = []
+
+    def add_room(self, room):
+        self.rooms.append(room)
+
+    def search_available_rooms(self, category, check_in_date, check_out_date):
+        available_rooms = []
+        for room in self.rooms:
+            if room.category == category and room.available:
+                available_rooms.append(room)
+        return available_rooms
+
+    def make_reservation(self, guest_name, room_number, check_in_date, check_out_date):
+        for room in self.rooms:
+            if room.room_number == room_number and room.available:
+                room.available = False
+                return Reservation(guest_name, room, check_in_date, check_out_date)
+        return None
+
+    def view_booking_details(self, reservation):
+        print("Guest Name:", reservation.guest_name)
+        print("Room Number:", reservation.room.room_number)
+        print("Category:", reservation.room.category)
+        print("Check-in Date:", reservation.check_in_date)
+        print("Check-out Date:", reservation.check_out_date)
+        print("Total Price:", reservation.room.price)
+
+# Create a hotel
+hotel = Hotel("Cozy Hotel")
+
+# Add rooms
+room1 = Room("101", "Standard", 100)
+room2 = Room("102", "Standard", 100)
+room3 = Room("201", "Deluxe", 150)
+room4 = Room("202", "Deluxe", 150)
+hotel.add_room(room1)
+hotel.add_room(room2)
+hotel.add_room(room3)
+hotel.add_room(room4)
+
+# Search for available rooms
+available_rooms = hotel.search_available_rooms("Standard", "2024-03-01", "2024-03-05")
+print("Available Standard Rooms:")
+for room in available_rooms:
+    print("Room Number:", room.room_number)
+
+# Make a reservation
+reservation = hotel.make_reservation("John Doe", "101", "2024-03-01", "2024-03-05")
+if reservation:
+    print("\nReservation Successful!")
+    hotel.view_booking_details(reservation)
+else:
+    print("\nFailed to make reservation. Room not available.")
+
